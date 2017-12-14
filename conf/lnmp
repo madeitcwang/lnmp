@@ -355,7 +355,8 @@ Add_VHost()
 
     Echo_Yellow "Allow access log? (y/n) "
     read access_log
-    if [[ "${access_log}" == "n" || "${access_log}" == "" ]]; then
+    # 默认开启
+    if ["${access_log}" == "n"]; then
         echo "Disable access log."
         al="access_log off;"
     else
@@ -364,8 +365,8 @@ Add_VHost()
         if [ "${al_name}" == "" ]; then
             al_name="${domain}"
         fi
-        al="access_log  /home/wwwlogs/${al_name}.log;"
-        echo "You access log filename: ${al_name}.log"
+        al="access_log  /home/wwwroot/logs/${domain}.log;"
+        echo "You access log filepath: /home/wwwroot/logs/${domain}.log"
     fi
 
     Multiple_PHP_Select
