@@ -831,8 +831,9 @@ Add_SSL_Info_Menu()
         if [ "${al_name}" == "" ]; then
             al_name="${domain}"
         fi
-        al="access_log  /home/wwwlogs/${al_name}.log;"
-        echo "You access log filename: ${al_name}.log"
+        #al="access_log  /home/wwwlogs/${al_name}.log;"
+        al="access_log  /home/wwwroot/${domain}/logs/${domain}.log;"
+        echo "You access log filename: /home/wwwroot/${domain}/logs/${domain}.log"
     fi
 
     Multiple_PHP_Select
