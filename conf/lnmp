@@ -169,7 +169,7 @@ Add_VHost_Config()
         echo "You select the exist rewrite rule:/usr/local/nginx/conf/${rewrite}.conf"
     fi
 
-    cat >"/home/usr/local/nginx/conf/vhost/${domain}.conf"<<EOF
+    cat >"/usr/local/nginx/conf/vhost/${domain}.conf"<<EOF
 server
     {
         listen 80;
