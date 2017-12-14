@@ -175,9 +175,9 @@ server
         listen 80;
         #listen [::]:80;
         server_name ${domain} ${moredomain};
-        index index.php;
-        root  ${vhostdir};
-        set $document_root '${vhostdir}';
+        index index.php indexhtml;
+        # 默认在htdocs
+        root  ${vhostdir}/htdocs;
 
         include ${rewrite}.conf;
         #error_page   404   /404.html;
