@@ -131,14 +131,14 @@ esac
 
 Add_VHost_Config()
 {
-    cat >"/usr/local/apache/conf/vhost/${domain}.conf"<<EOF
+    cat >"/home/usr/local/apache/conf/vhost/${domain}.conf"<<EOF
 <VirtualHost *:80>
 ServerAdmin ${email}
 php_admin_value open_basedir "${vhostdir}:/tmp/:/var/tmp/:/proc/"
 DocumentRoot "${vhostdir}"
 ServerName ${domain}
-ErrorLog "/home/wwwlogs/${al_name}-error_log"
-CustomLog "/home/wwwlogs/${al_name}-access_log" combined
+ErrorLog "/home/wwwroot/${domain}-error_log"
+CustomLog "/home/wwwroot/${domain}-access_log" combined
 <Directory "${vhostdir}">
     SetOutputFilter DEFLATE
     Options FollowSymLinks
@@ -151,13 +151,13 @@ CustomLog "/home/wwwlogs/${al_name}-access_log" combined
 EOF
 
     if [ "${access_log}" != 'y' ]; then
-        sed -i 's/^ErrorLog/#ErrorLog/g' /usr/local/apache/conf/vhost/${domain}.conf
-        sed -i 's/^CustomLog/#CustomLog/g' /usr/local/apache/conf/vhost/${domain}.conf
+        sed -i 's/^ErrorLog/#ErrorLog/g' /home/usr/local/apache/conf/vhost/${domain}.conf
+        sed -i 's/^CustomLog/#CustomLog/g' /home/usr/local/apache/conf/vhost/${domain}.conf
     fi
 
     if [ "${moredomain}" != "" ]; then
         sed -i "/ServerName/a\
-    ServerAlias ${moredomain}" /usr/local/apache/conf/vhost/${domain}.conf
+    ServerAlias ${moredomain}" /home/usr/local/apache/conf/vhost/${domain}.conf
     fi
 
     echo "Test Apache configure file..."
@@ -173,7 +173,7 @@ Add_VHost()
         Echo_Yellow "Please enter domain(example: www.lnmp.org): "
         read domain
         if [ "${domain}" != "" ]; then
-            if [ -f "/usr/local/apache/conf/vhost/${domain}.conf" ]; then
+            if [ -f "/home/usr/local/apache/conf/vhost/${domain}.conf" ]; then
                 Echo_Red " ${domain} is exist,please check!"
                 exit 1
             else
@@ -332,13 +332,13 @@ Del_VHost()
             break
         fi
     done
-    if [ ! -f "/usr/local/apache/conf/vhost/${domain}.conf" ]; then
+    if [ ! -f "/home/usr/local/apache/conf/vhost/${domain}.conf" ]; then
         echo "=========================================="
         echo "Domain: ${domain} was not exist!"
         echo "=========================================="
         exit 1
     else
-        rm -f /usr/local/apache/conf/vhost/${domain}.conf
+        rm -f /home/usr/local/apache/conf/vhost/${domain}.conf
         echo "========================================================"
         echo "Domain: ${domain} has been deleted."
         echo "Website files will not be deleted for security reasons."
@@ -655,7 +655,7 @@ Add_SSL_Info_Menu()
         if [ "${al_name}" == "" ]; then
             al_name="${domain}"
         fi
-        al="access_log  /home/wwwlogs/${al_name}.log;"
+        al="access_log  /home/wwwroot/${domain}.log;"
         echo "You access log filename: ${al_name}.log"
     fi
 
@@ -764,15 +764,15 @@ EOF
 Create_SSL_Config()
 {
     sed -i 's@#Include conf/extra/httpd-ssl.conf@Include conf/extra/httpd-ssl.conf@g' /usr/local/apache/conf/httpd.conf
-    cat >>"/usr/local/apache/conf/vhost/${domain}.conf"<<EOF
+    cat >>"/home/usr/local/apache/conf/vhost/${domain}.conf"<<EOF
 
 <VirtualHost *:443>
 ServerAdmin ${email}
 php_admin_value open_basedir "${vhostdir}:/tmp/:/var/tmp/:/proc/"
 DocumentRoot ${vhostdir}
 ServerName ${domain}:443
-ErrorLog "/home/wwwlogs/${al_name}-error_log"
-CustomLog "/home/wwwlogs/${al_name}-access_log" combined
+ErrorLog "/home/wwwroot/${domain}-error_log"
+CustomLog "/home/wwwroot/${domain}-access_log" combined
 SSLEngine on
 SSLCertificateFile ${ssl_certificate}
 SSLCertificateKeyFile ${ssl_certificate_key}
@@ -788,13 +788,13 @@ SSLCertificateKeyFile ${ssl_certificate_key}
 EOF
 
     if [ "${access_log}" != 'y' ]; then
-        sed -i 's/^ErrorLog/#ErrorLog/g' /usr/local/apache/conf/vhost/${domain}.conf
-        sed -i 's/^CustomLog/#CustomLog/g' /usr/local/apache/conf/vhost/${domain}.conf
+        sed -i 's/^ErrorLog/#ErrorLog/g' /home/usr/local/apache/conf/vhost/${domain}.conf
+        sed -i 's/^CustomLog/#CustomLog/g' /home/usr/local/apache/conf/vhost/${domain}.conf
     fi
 
     if [ "${moredomain}" != "" ]; then
         sed -i "/ServerName/a\
-    ServerAlias ${moredomain}" /usr/local/apache/conf/vhost/${domain}.conf
+    ServerAlias ${moredomain}" /home/usr/local/apache/conf/vhost/${domain}.conf
     fi
 
     echo "Test Apache configure file..."
@@ -817,7 +817,7 @@ Add_SSL()
         else
             letsdomain="-d ${domain}"
         fi
-        if [ ! -s "/usr/local/apache/conf/vhost/${domain}.conf" ]; then
+        if [ ! -s "/home/usr/local/apache/conf/vhost/${domain}.conf" ]; then
             Add_VHost_Config
         fi
         if [ ! -d "${vhostdir}" ]; then

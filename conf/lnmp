@@ -169,14 +169,15 @@ Add_VHost_Config()
         echo "You select the exist rewrite rule:/usr/local/nginx/conf/${rewrite}.conf"
     fi
 
-    cat >"/usr/local/nginx/conf/vhost/${domain}.conf"<<EOF
+    cat >"/home/usr/local/nginx/conf/vhost/${domain}.conf"<<EOF
 server
     {
         listen 80;
         #listen [::]:80;
         server_name ${domain} ${moredomain};
-        index index.html index.htm index.php default.html default.htm default.php;
+        index index.php;
         root  ${vhostdir};
+        set $document_root '${vhostdir}';
 
         include ${rewrite}.conf;
         #error_page   404   /404.html;
@@ -185,6 +186,11 @@ server
         #location ~ /(wp-content|uploads|wp-includes|images)/.*\.php$ { deny all; }
 
         ${include_enable_php}
+
+        location ~ /(uploadfile|uploads)/.*\.(php|php5)$
+        {
+            deny all;
+        }
 
         location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
         {
@@ -290,6 +296,14 @@ Multiple_PHP_Select()
 
 Add_VHost()
 {
+
+    # 将logs文件放到域名文件夹下，可以通过ftp下载日志
+    # /home/wwwroot/domain/htdocs,
+    # /home/wwwroot/domain/logs
+
+    # /home/wwwroot/domain；；ftp 目录
+
+
     domain=""
     while :;do
         Echo_Yellow "Please enter domain(example: www.lnmp.org): "
@@ -319,6 +333,7 @@ Add_VHost()
     read vhostdir
     if [ "${vhostdir}" == "" ]; then
         vhostdir="/home/wwwroot/${domain}"
+
     fi
     echo "Virtual Host Directory: ${vhostdir}"
 
@@ -389,8 +404,11 @@ Add_VHost()
 
     echo "Create Virtul Host directory......"
     mkdir -p ${vhostdir}
+    mkdir -p ${vhostdir}/htdocs
+    mkdir -p ${vhostdir}/logs
+
     if [ "${access_log}" == "y" ]; then
-        touch /home/wwwlogs/${al_name}.log
+        touch ${vhostdir}/logs/${domain}.log
     fi
     echo "set permissions of Virtual Host directory......"
     chmod -R 755 ${vhostdir}
@@ -928,16 +946,25 @@ Create_SSL_Config()
 
     cat >>"/usr/local/nginx/conf/vhost/${domain}.conf"<<EOF
 
+# 支持80跳转
+server {
+    listen 80;
+    server_name ${domain} ${moredomain};
+    return 301 https://$server_name$request_uri;
+}
+
 server
     {
         listen 443 ssl http2;
         #listen [::]:443 ssl http2;
         server_name ${domain} ${moredomain};
-        index index.html index.htm index.php default.html default.htm default.php;
-        root  ${vhostdir};
+        index index.php index.html ;
+        root  ${vhostdir}/htdocs;
         ssl on;
-        ssl_certificate ${ssl_certificate};
-        ssl_certificate_key ${ssl_certificate_key};
+        #ssl_certificate ${ssl_certificate};
+        #ssl_certificate_key ${ssl_certificate_key};
+        ssl_certificate ${vhostdir}/ssls/${domain}.crt;
+        ssl_certificate_key  ${vhostdir}/ssls/${domain}.key;
         ssl_session_timeout 5m;
         ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
         ssl_prefer_server_ciphers on;
