@@ -135,11 +135,11 @@ Add_VHost_Config()
 <VirtualHost *:80>
 ServerAdmin ${email}
 php_admin_value open_basedir "${vhostdir}:/tmp/:/var/tmp/:/proc/"
-DocumentRoot "${vhostdir}"
+DocumentRoot "${vhostdir}/htdocs"
 ServerName ${domain}
-ErrorLog "/home/wwwroot/${domain}-error_log"
-CustomLog "/home/wwwroot/${domain}-access_log" combined
-<Directory "${vhostdir}">
+ErrorLog "/home/wwwroot/${domain}/logs/error.log"
+CustomLog "/home/wwwroot/${domain}/logs/access.log" combined
+<Directory "${vhostdir}/htdocs">
     SetOutputFilter DEFLATE
     Options FollowSymLinks
     AllowOverride All
@@ -205,7 +205,7 @@ Add_VHost()
     if [[ "${access_log}" == "n" || "${access_log}" == "" ]]; then
         echo "Disable access log."
     else
-        Echo_Yellow "Enter access log filename(Default:${domain}-access_log): "
+        Echo_Yellow "Enter access log filename(Default:${domain}/access.log): "
         read al_name
         if [ "${al_name}" == "" ]; then
             al_name="${domain}"
@@ -259,6 +259,10 @@ Add_VHost()
 
     echo "Create Virtul Host directory......"
     mkdir -p ${vhostdir}
+    # 增加目录
+    mkdir -p ${vhostdir}/htdocs
+    mkdir -p ${vhostdir}/logs
+
     echo "set permissions of Virtual Host directory......"
     chmod -R 755 ${vhostdir}
     chown -R www:www ${vhostdir}
@@ -771,8 +775,8 @@ ServerAdmin ${email}
 php_admin_value open_basedir "${vhostdir}:/tmp/:/var/tmp/:/proc/"
 DocumentRoot ${vhostdir}
 ServerName ${domain}:443
-ErrorLog "/home/wwwroot/${domain}-error_log"
-CustomLog "/home/wwwroot/${domain}-access_log" combined
+ErrorLog "/home/wwwroot/${domain}/logs/error.log"
+CustomLog "/home/wwwroot/${domain}/logs/access.log" combined
 SSLEngine on
 SSLCertificateFile ${ssl_certificate}
 SSLCertificateKeyFile ${ssl_certificate_key}

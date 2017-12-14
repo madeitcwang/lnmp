@@ -175,7 +175,7 @@ server
         listen 80;
         #listen [::]:80;
         server_name ${domain} ${moredomain};
-        index index.php indexhtml;
+        index index.php index.html;
         # 默认在htdocs
         root  ${vhostdir}/htdocs;
 
@@ -356,7 +356,7 @@ Add_VHost()
     Echo_Yellow "Allow access log? (y/n) "
     read access_log
     # 默认开启
-    if ["${access_log}" == "n"]; then
+    if [ "${access_log}" == "n" ]; then
         echo "Disable access log."
         al="access_log off;"
     else
@@ -407,9 +407,10 @@ Add_VHost()
     mkdir -p ${vhostdir}
     mkdir -p ${vhostdir}/htdocs
     mkdir -p ${vhostdir}/logs
+    mkdir -p /usr/local/nginx/conf/vhost
 
     if [ "${access_log}" == "y" ]; then
-        touch ${vhostdir}/logs/${domain}.log
+        touch ${vhostdir}/${domain}/logs/access.log
     fi
     echo "set permissions of Virtual Host directory......"
     chmod -R 755 ${vhostdir}
