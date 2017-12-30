@@ -371,8 +371,8 @@ Add_VHost()
         if [ "${al_name}" == "" ]; then
             al_name="${domain}"
         fi
-        al="access_log  /home/wwwroot/logs/${domain}.log;"
-        echo "You access log filepath: /home/wwwroot/logs/${domain}.log"
+        al="access_log  /home/wwwroot/${domain}/logs/logs-${domain}.log;"
+        echo "You access log filepath: /home/wwwroot/${domain}/logs/logs-${domain}.log"
     fi
 
     Multiple_PHP_Select
