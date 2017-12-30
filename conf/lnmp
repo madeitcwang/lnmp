@@ -175,15 +175,10 @@ server
         listen 80;
         #listen [::]:80;
         server_name ${domain} ${moredomain};
-<<<<<<< HEAD
-        index index.php;
-        root  ${vhostdir};
-        # set $document_root '${vhostdir}';
-=======
         index index.php index.html;
         # 默认在htdocs
         root  ${vhostdir}/htdocs;
->>>>>>> 7472fd94a54f0c0e4282474b46a927244dfd7af6
+        # set $document_root '${vhostdir}';
 
         include ${rewrite}.conf;
         #error_page   404   /404.html;
