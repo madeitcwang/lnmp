@@ -424,11 +424,11 @@ Add_VHost()
 
     Add_VHost_Config
 
-    cat >${vhostdir}/.user.ini<<EOF
-open_basedir=${vhostdir}:/tmp/:/proc/
+    cat >${vhostdir}/htdocs/.user.ini<<EOF
+open_basedir=${vhostdir}/htdocs:/tmp/:/proc/
 EOF
-    chmod 644 ${vhostdir}/.user.ini
-    chattr +i ${vhostdir}/.user.ini
+    chmod 644 ${vhostdir}/htdocs/.user.ini
+    chattr +i ${vhostdir}/htdocs/.user.ini
 
     /etc/init.d/php-fpm restart
 
