@@ -177,7 +177,7 @@ server
         server_name ${domain} ${moredomain};
         index index.php;
         root  ${vhostdir};
-        set $document_root '${vhostdir}';
+        # set $document_root '${vhostdir}';
 
         include ${rewrite}.conf;
         #error_page   404   /404.html;
