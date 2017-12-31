@@ -175,9 +175,15 @@ server
         listen 80;
         #listen [::]:80;
         server_name ${domain} ${moredomain};
+<<<<<<< HEAD
         index index.php;
         root  ${vhostdir};
         # set $document_root '${vhostdir}';
+=======
+        index index.php index.html;
+        # 默认在htdocs
+        root  ${vhostdir}/htdocs;
+>>>>>>> 7472fd94a54f0c0e4282474b46a927244dfd7af6
 
         include ${rewrite}.conf;
         #error_page   404   /404.html;
@@ -355,7 +361,8 @@ Add_VHost()
 
     Echo_Yellow "Allow access log? (y/n) "
     read access_log
-    if [[ "${access_log}" == "n" || "${access_log}" == "" ]]; then
+    # 默认开启
+    if [ "${access_log}" == "n" ]; then
         echo "Disable access log."
         al="access_log off;"
     else
@@ -364,8 +371,8 @@ Add_VHost()
         if [ "${al_name}" == "" ]; then
             al_name="${domain}"
         fi
-        al="access_log  /home/wwwlogs/${al_name}.log;"
-        echo "You access log filename: ${al_name}.log"
+        al="access_log  /home/wwwroot/logs/${domain}.log;"
+        echo "You access log filepath: /home/wwwroot/logs/${domain}.log"
     fi
 
     Multiple_PHP_Select
@@ -406,9 +413,10 @@ Add_VHost()
     mkdir -p ${vhostdir}
     mkdir -p ${vhostdir}/htdocs
     mkdir -p ${vhostdir}/logs
+    mkdir -p /usr/local/nginx/conf/vhost
 
     if [ "${access_log}" == "y" ]; then
-        touch ${vhostdir}/logs/${domain}.log
+        touch ${vhostdir}/${domain}/logs/access.log
     fi
     echo "set permissions of Virtual Host directory......"
     chmod -R 755 ${vhostdir}
