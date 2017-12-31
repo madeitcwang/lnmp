@@ -179,7 +179,8 @@ server
         # 默认在htdocs
         root  ${vhostdir}/htdocs;
         # set $document_root '${vhostdir}';
-
+        # 需要注释掉conf目录下的fastcgi.conf最后一行 fastcgi_param PHP_ADMIN_VALUE
+        fastcgi_param PHP_ADMIN_VALUE "open_basedir=${vhostdir}/htdocs/:/tmp/:/proc/";
         include ${rewrite}.conf;
         #error_page   404   /404.html;
 
