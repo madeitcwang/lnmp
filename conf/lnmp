@@ -175,16 +175,12 @@ server
         listen 80;
         #listen [::]:80;
         server_name ${domain} ${moredomain};
-<<<<<<< HEAD
-        index index.php;
-        root  ${vhostdir};
-        # set $document_root '${vhostdir}';
-=======
         index index.php index.html;
         # 默认在htdocs
         root  ${vhostdir}/htdocs;
->>>>>>> 7472fd94a54f0c0e4282474b46a927244dfd7af6
-
+        # set $document_root '${vhostdir}';
+        # 需要注释掉conf目录下的fastcgi.conf最后一行 fastcgi_param PHP_ADMIN_VALUE
+        fastcgi_param PHP_ADMIN_VALUE "open_basedir=${vhostdir}/htdocs/:/tmp/:/proc/";
         include ${rewrite}.conf;
         #error_page   404   /404.html;
 
@@ -373,8 +369,8 @@ Add_VHost()
         if [ "${al_name}" == "" ]; then
             al_name="${domain}"
         fi
-        al="access_log  /home/wwwroot/logs/${domain}.log;"
-        echo "You access log filepath: /home/wwwroot/logs/${domain}.log"
+        al="access_log  /home/wwwroot/${domain}/logs/logs-${domain}.log;"
+        echo "You access log filepath: /home/wwwroot/${domain}/logs/logs-${domain}.log"
     fi
 
     Multiple_PHP_Select
@@ -426,11 +422,11 @@ Add_VHost()
 
     Add_VHost_Config
 
-    cat >${vhostdir}/.user.ini<<EOF
-open_basedir=${vhostdir}:/tmp/:/proc/
+    cat >${vhostdir}/htdocs/.user.ini<<EOF
+open_basedir=${vhostdir}/htdocs:/tmp/:/proc/
 EOF
-    chmod 644 ${vhostdir}/.user.ini
-    chattr +i ${vhostdir}/.user.ini
+    chmod 644 ${vhostdir}/htdocs/.user.ini
+    chattr +i ${vhostdir}/htdocs/.user.ini
 
     /etc/init.d/php-fpm restart
 
