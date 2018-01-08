@@ -189,14 +189,16 @@ server
         #error_page   404   /404.html;
 
         # Deny access to PHP files in specific directory
+        # 禁止运行的目录，必须放到，使用php之前才能生效 
         #location ~ /(wp-content|uploads|wp-includes|images)/.*\.php$ { deny all; }
-
-        ${include_enable_php}
-
         location ~ /(uploadfile|uploads)/.*\.(php|php5)$
         {
             deny all;
         }
+
+        ${include_enable_php}
+
+
 
         location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
         {
